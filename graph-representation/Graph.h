@@ -57,4 +57,6 @@ int GraphDegree(Graph g, Vertex v);
  */
 void GraphShow(Graph g);
 
+
+void GraphInput(Graph g);
 #endif
