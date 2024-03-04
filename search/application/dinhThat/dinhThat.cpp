@@ -3,19 +3,27 @@
 #include <stack>
 #include <vector>
 #include <set>
+#include <bits/stdc++.h>
 using namespace std;
 struct Graph{
     int nV;
     int nE;
     vector<int> edges[1001];
 };
-void dfs(Graph *g, int v, bool *visited, int x);
-void dfs(Graph *g, int v, bool *visited, int x, int *predecessor);
-void listPendant(Graph *g, int src, int dest);
-void reinit(Graph *g, bool *visited);
-void reinit(Graph *g, int *predecessor);
-int countConnectedComponents(Graph *g, int x, bool *visited);
+vector<vector<int>> totalPaths;
+void dfs(Graph *g, int u, int v, bool *visited, stack<int> &path);
+void print(stack<int> path);
+void testCase();
 int main () {
+    int t;
+    cin >> t;
+    while (t--) {
+        testCase();
+        cout << endl;
+    }
+    return 0;
+}
+void testCase() {
     int nV, src, dest;
     cin >> nV >> src >> dest;
     src--;
@@ -32,105 +40,51 @@ int main () {
             g->edges[i].push_back(stoi(temp) - 1);
         }
     }
-    listPendant(g, src, dest);
-    return 0;
-}
-void reinit(Graph *g, int *predecessor) {
-    for (int i = 0; i < g->nV; i++) {
-        predecessor[i] = -1;
-    }
-}
-void dfs(Graph *g, int v, bool *visited, int x, int *predecessor) {
-    stack<int> st;
-    st.push(v);
-    visited[v] = true;
-    while (!st.empty()) {
-        int u = st.top();
-        st.pop();
-        for (int i = 0; i < g->edges[u].size(); i++) {
-            int curr = g->edges[u][i];
-            if (curr != x) {
-                if (!visited[curr]) {
-                    st.push(u);
-                    st.push(curr);
-                    visited[curr] = true;
-                    predecessor[curr] = u;
-                    break;
-                }
-            }
-            
-        }   
-    }
-}
-void reinit(Graph *g, bool *visited) {
-    for (int i = 0; i < g->nV; i++) {
-        visited[i] = false;
-    }
-}
-int countConnectedComponents(Graph *g, int x, bool *visited) {
-    int count = 0;
-    for (int i = 0; i < g->nV; i++) {
-        if (!visited[i] && i != x) {
-            count++;
-            dfs(g, i, visited, x);
-        }
-    }
-    return count;
-}
-void listPendant(Graph *g, int src, int dest) {
+    stack<int> path;
     bool visited[g->nV];
-    reinit(g, visited);
-    int predecessor[g->nV];
-
-    int countFull = countConnectedComponents(g, -1, visited);
-    vector<int> pendants;
-    for (int i = 0; i < g->nV; i++) {
-        reinit(g, visited);
-        int countCheck = countConnectedComponents(g, i, visited);
-        if (countCheck > countFull) {
-            pendants.push_back(i + 1);
-            if (src == (i + 1) || dest == (i + 1)) {
-                cout << "Khong co dinh that";
-                return;
-            }
-            reinit(g, predecessor);
-            dfs(g, src, visited, i, predecessor);
-            if (predecessor[dest] != -1) {
-                cout << "Khong co dinh that";
-                return;
-            }
+    memset(visited, false, sizeof(visited));
+    dfs(g, src, dest, visited, path);
+    int numPaths = totalPaths.size();
+    map<int, int> mp;
+    for (auto x : totalPaths) {
+        for (int i = 0; i < x.size(); i++) {
+            mp[x[i]]++;
         }
-        
     }
-    if (pendants.size() == 0) {
-        cout << "Khong co dinh that";
-    } else {
-        cout << "Dinh that: " ;
-        for (int i = 0; i < pendants.size(); i++) {
-            cout << pendants[i] << " ";
+    vector<int> res;
+    for (auto x : mp) {
+        if (x.second == numPaths && x.first != src && x.first != dest) {
+            res.push_back(x.first + 1);
         }
-        cout << endl;
     }
-
+    cout << "Cac dinh that: " ;
+    for (auto x : res) {
+        cout << x << " ";
+    }
+    totalPaths.clear();
 }
-void dfs(Graph *g, int v, bool *visited, int x) {
-    stack<int> st;
-    st.push(v);
-    visited[v] = true;
-    while (!st.empty()) {
-        int u = st.top();
-        st.pop();
-        for (int i = 0; i < g->edges[u].size(); i++) {
-            int curr = g->edges[u][i];
-            if (curr != x) {
-                if (!visited[curr]) {
-                    st.push(u);
-                    st.push(curr);
-                    visited[curr] = true;
-                    break;
-                }
-            }
-            
-        }   
+void print(stack<int> path) {
+    vector<int> temp;
+    while (!path.empty()) {
+        int x= path.top();
+        path.pop();
+        temp.push_back(x);
     }
+    totalPaths.push_back(temp);
+}
+void dfs(Graph *g, int u, int v, bool *visited, stack<int> &path) {
+    visited[u] = true;
+    path.push(u);
+    if (u == v) {
+        print(path);
+    } else {
+        for (int i = 0; i < g->edges[u].size(); i++) {
+            int x = g->edges[u][i];
+            if (!visited[x]) {
+                dfs(g, x, v, visited, path);
+            }
+        }
+    }
+    path.pop();
+    visited[u] = false;
 }
