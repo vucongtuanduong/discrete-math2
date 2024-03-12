@@ -7,7 +7,12 @@ struct Graph{
 };
 void findEulerCycle(Graph *g);
 bool hasAdjacent(Graph *g, int v);
+bool isEulerGraph(Graph *g);
 int main () {
+    #ifndef ONLINE_JUDGE
+    freopen("input.txt", "r", stdin);
+    freopen("output.txt", "w", stdout);
+    #endif
     Graph *g = new Graph;
     int nV, nE;
     cin >> nV >> nE;
@@ -18,8 +23,28 @@ int main () {
             cin >> g->edges[i][j];
         }
     }
+    if (isEulerGraph(g)) {
+        cout << "Do thi la do thi Euler\n";
+    } else {
+        cout << "Do thi khong la do thi Euler\n";
+    }
     findEulerCycle(g);
     return 0;
+}
+bool isEulerGraph(Graph *g){
+    int degree[g->nV] = {0} ;
+    for (int i = 0; i < g->nV; i++) {
+        for (int j = 0; j < g->nV; j++) {
+            if (g->edges[i][j]) {
+                degree[i]++;
+            }
+        }
+        if (degree[i] % 2 == 1) {
+            return false;
+        }
+    }
+    return true;
+
 }
 bool hasAdjacent(Graph *g, int v) {
     for (int i = 0 ; i < g->nV; i++ ){

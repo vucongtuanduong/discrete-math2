@@ -3,12 +3,19 @@ using namespace std;
 struct Graph{
     int nV;
     int nE;
+    int startVertice;
+    int endVertice;
     int edges[101][101];
 };
 void findEulerPath(Graph *g);
 bool hasAdjacent(Graph *g, int v);
 int findStartVertice(Graph *g);
+bool isSemiEulerian(Graph *g);
 int main () {
+    #ifndef ONLINE_JUDGE
+    freopen("input.txt", "r", stdin);
+    freopen("output.txt", "w", stdout);
+    #endif
     Graph *g = new Graph;
     int nV, nE;
     cin >> nV >> nE;
@@ -19,10 +26,51 @@ int main () {
             cin >> g->edges[i][j];
         }
     }
+    if (isSemiEulerian(g)) {
+        cout << "Do thi la do thi nua Euler\n";
+    } else {
+        cout << "Do thi khong la do thi nua Euler\n";
+    }
     findEulerPath(g);
     return 0;
 }
+bool isSemiEulerian(Graph *g) {
+    bool ok1 = false, ok2 = false;
+    for (int i = 0; i < g->nV; i++) {
+        int outdegree = 0, indegree = 0;
+        for (int j = 0; j < g->nV; j++) {
+            if (g->edges[i][j]) {
+                outdegree++;
+            } 
+            if (g->edges[j][i])  {
+                indegree++;
+            }
+        }
+        if (outdegree - indegree == 1 ) {
+            if (ok1 == false) {
+                g->startVertice = i;
+                ok1 = true;
+            } else {
+                return false;
+            }
+            
+        }
+        else if (indegree - outdegree == 1) {
+            if (ok2 == false) {
+                g->endVertice = i;
+                ok2 = true;
+            } else {
+                return false;
+            }
+        } else if (indegree == outdegree) {
 
+        } else {
+            return false;
+        }
+
+    }
+    return true;
+}
 bool hasAdjacent(Graph *g, int v) {
     for (int i = 0 ; i < g->nV; i++ ){
         if (g->edges[v][i]) {
@@ -31,27 +79,12 @@ bool hasAdjacent(Graph *g, int v) {
     }
     return false;
 }
-int findStartVertice(Graph *g) {
-    int start = 0;
-    for (int i = 0; i < g->nV; i++) {
-        int degree = 0;
-        for (int j = 0; j < g->nV; j++) {
-            if (g->edges[i][j]) {
-                degree++;
-            }
-        }
-        if (degree % 2 == 1) {
-            start = i;
-            break;
-        }
-    }
-    return start;
-}
+
 
 void findEulerPath(Graph *g) {
     stack<int> st;
     vector<int> eulerpath;
-    int start = findStartVertice(g);
+    int start = g->startVertice;
     st.push(start);
     while (!st.empty()) {
         int x = st.top();
@@ -60,7 +93,6 @@ void findEulerPath(Graph *g) {
                 if (g->edges[x][i]) {
                     st.push(i);
                     g->edges[x][i] = 0;
-                    g->edges[i][x] = 0;
                     break;
                 }
             }
