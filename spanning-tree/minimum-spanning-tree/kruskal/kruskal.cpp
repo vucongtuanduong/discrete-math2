@@ -83,7 +83,6 @@ void testCase() {
     vector<Edge>mst = kruskalMST(g);
     int mstCost = 0;
     for (Edge  edge : mst) {
-        cout << edge.u << " " << edge.v << endl;
         mstCost += edge.w;
     }
     cout << mstCost;
