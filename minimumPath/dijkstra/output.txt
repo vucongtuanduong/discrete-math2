@@ -1,0 +1,3 @@
+Duong di ngan nhat tu 1 toi cac dinh lan luot la: 0 4 12 19 26 16 18 8 14 
+Duong di ngan nhat tu 8 toi cac dinh lan luot la: 6 7 4 5 1 1 7 0 
+Duong di ngan nhat tu 1 toi cac dinh lan luot la: 0 2 2 1 2 1 1 3 
