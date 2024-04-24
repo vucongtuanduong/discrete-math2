@@ -1,0 +1,3 @@
+Shortest path from vertex 1 to other vertices: 0 5 9 INF INF 13 2 12 
+Shortest path from vertex 1 to other vertices: 0 2 1 2 2 0 1 1 
+Shortest path from vertex 4 to other vertices: 2 3 2 0 3 1 3 3 
