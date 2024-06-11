@@ -3,8 +3,40 @@ using namespace std;
 const int INF = 1e9;
 int nV, nE;
 int a[101][101];
-
 void dijkstra(int u) {
+    vector<int> d(nV, INF);
+    vector<int> truoc(nV, -1);
+    vector<bool> visited(nV, false);
+
+    d[u] = 0;
+    truoc[u] = -1;
+    priority_queue<pair<int,int>, vector<pair<int,int>>, greater<pair<int,int>>> pq;
+    pq.push({0, u});
+
+    while (!pq.empty()) {
+        int v = pq.top().second;
+        pq.pop();
+
+        visited[v] = true;
+
+        for (int x = 0; x < nV; x++) {
+            if (a[v][x] != INF && !visited[x] && d[x] > d[v] + a[v][x]) {
+                d[x] = d[v] + a[v][x];
+                truoc[x] = v;
+                pq.push({d[x], x});
+            }
+        }
+    }
+
+    for (int i = 0; i < nV; i++) {
+        if (d[i] == INF)
+            cout << "INF ";
+        else
+            cout << d[i] << " ";
+    }
+    cout << endl;
+}
+void dijkstra1(int u) {
     vector<int> d(nV, INF);
     vector<int> truoc(nV, -1);
     vector<bool> visited(nV, false);
