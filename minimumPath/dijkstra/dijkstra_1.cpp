@@ -3,27 +3,27 @@ using namespace std;
 const int INF = 1e9;
 int nV, nE;
 int a[101][101];
-void dijkstra(int u) {
+void dijkstra(int x) {
     vector<int> d(nV, INF);
     vector<int> truoc(nV, -1);
     vector<bool> visited(nV, false);
 
-    d[u] = 0;
-    truoc[u] = -1;
+    d[x] = 0;
+    truoc[x] = -1;
     priority_queue<pair<int,int>, vector<pair<int,int>>, greater<pair<int,int>>> pq;
-    pq.push({0, u});
+    pq.push({0, x});
 
     while (!pq.empty()) {
-        int v = pq.top().second;
+        int u = pq.top().second;
         pq.pop();
 
-        visited[v] = true;
+        visited[u] = true;
 
-        for (int x = 0; x < nV; x++) {
-            if (a[v][x] != INF && !visited[x] && d[x] > d[v] + a[v][x]) {
-                d[x] = d[v] + a[v][x];
-                truoc[x] = v;
-                pq.push({d[x], x});
+        for (int v = 0; v < nV; v++) {
+            if (a[u][v] != INF && !visited[v] && d[v] > d[u] + a[u][v]) {
+                d[v] = d[u] + a[u][v];
+                truoc[v] = u;
+                pq.push({d[v], v});
             }
         }
     }
