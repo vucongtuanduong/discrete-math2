@@ -1,6 +1,6 @@
 #include <bits/stdc++.h>
 using namespace std;
-const int INF = 1e9;
+const int INF = 1e3;
 int nV, nE;
 int a[101][101];
 
