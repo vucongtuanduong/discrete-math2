@@ -6,14 +6,19 @@ int a[101][101];
 
 void bellman_ford(int u) {
     vector<int> d(nV, INF);
+    vector<int> truoc(nV, -1);
     d[u] = 0;
     for (int k = 1; k <= nV - 1; k++) {
-        for (int i = 0; i < nV; i++) {
-            for (int j  = 0; j < nV; j++) {
-                if (a[i][j] != INF && d[j] > d[i] + a[i][j]) {
-                    d[j] = d[i] + a[i][j];
+        for (int j = 0; j < nV; j++) {
+            if (j != u) {
+                for (int i  = 0; i < nV; i++) {
+                    if (a[i][j] != INF && d[j] > d[i] + a[i][j]) {
+                        d[j] = d[i] + a[i][j];
+                        truoc[j] = i;
+                    }
                 }
             }
+            
         }
     }
 
