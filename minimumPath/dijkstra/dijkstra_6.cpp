@@ -1,35 +1,38 @@
 #include <bits/stdc++.h>
 using namespace std;
-const int INF = 1e3;
+const int INF = 1e9;
 int nV, nE;
 int a[101][101];
-
-void bellman_ford(int s) {
+void dijkstra(int x) {
     vector<int> d(nV, INF);
-    vector<int> truoc(nV, s);
+    vector<int> truoc(nV, x);
+    vector<bool> visited(nV, false);
     for (int i = 0; i < nV; i++) {
-        d[i] = a[s][i];
+        d[i] = a[x][i];
     }
-    d[s] = 0;
-    for (int k = 1; k <= nV - 1; k++) {
-        bool ok = false;
+    d[x] = 0;
+    visited[x] = true;
+    while (true) {
+        int u = -1, min = INT_MAX;
         for (int v = 0; v < nV; v++) {
-            if (v != s) {
-                for (int u = 0; u < nV; u++) {
-                    if (a[u][v] != INF && d[v] > d[u] + a[u][v]) {
-                        d[v] = d[u] + a[u][v];
-                        truoc[v] = u;
-                        ok = true;
-                    }
-                }
+            if (!visited[v] && d[v] < min) {
+                min = d[v];
+                u = v;
             }
+
         }
-        if (!ok) {
+        if (u == -1) {
             break;
         }
+        visited[u] = true;
+        for (int v = 0; v < nV; v++) {
+            if (a[u][v] != INF && !visited[v] && d[v] > d[u] + a[u][v]) {
+                d[v] = d[u] + a[u][v];
+                truoc[v] = u;
+            }
+        }
     }
-
-
+    
     for (int i = 0; i < nV; i++) {
         if (d[i] == INF)
             cout << "INF ";
@@ -39,6 +42,7 @@ void bellman_ford(int s) {
     cout << endl;
 }
 
+
 void testCase() {
     cin >> nV >> nE;
     for (int i = 0; i < nV; i++) {
@@ -46,7 +50,7 @@ void testCase() {
             cin >> a[i][j];
         }
     }
-    bellman_ford(0);
+    dijkstra(0);
 }
 
 int main() {
