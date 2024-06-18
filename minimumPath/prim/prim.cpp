@@ -7,7 +7,7 @@ int a[101][101];
 void prim(int x) {
     vector<bool> visited(nV, false);
     vector<int> d(nV, INF);
-    vector<int> truoc(nV, -1);
+    vector<int> truoc(nV, x);
     for (int i = 0; i < nV; i++) {
         d[i] = a[x][i];
     }
@@ -16,6 +16,7 @@ void prim(int x) {
     d[x] = 0;
     int dem = 1;
     int wt = 0;
+    // vector<pair<int,int>> v;
     while (dem < nV) {
         int u = -1, min = INF;
         for (int i = 0; i < nV; i++) {
@@ -30,6 +31,7 @@ void prim(int x) {
         }
         visited[u] = true;
         wt += a[u][truoc[u]];
+        v.push_back({truoc[u], u});
         dem++;
         for (int v = 0; v < nV; v++) {
             if (!visited[v] && d[v] > a[u][v]) {
@@ -39,9 +41,15 @@ void prim(int x) {
         }
     }
     cout << wt << endl;
+    // for (int i = 0; i < v.size(); i++) {
+    //     auto x = v[i];
+    //     cout << x.first + 1 << " " << x.second + 1 << endl;
+    // }
+
+
     for (int v = 0; v < nV; v++) {
         if (truoc[v] != -1) {
-            cout << v << " " << truoc[v] << endl;
+            cout << v + 1 << " " << truoc[v] + 1 << endl;
         }
     }
 }
